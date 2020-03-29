@@ -1,26 +1,21 @@
-#
-# This is the server logic of a Shiny web application. You can run the 
-# application by clicking 'Run App' above.
-#
-# Find out more about building applications with Shiny here:
-# 
-#    http://shiny.rstudio.com/
-#
-
 library(shiny)
 
+# load static parameters
+source("static_params.R")
+
+# load neural functions
+source("../harmans_code.R")
+
 # Define server logic required to draw a histogram
-shinyServer(function(input, output) {
-   
-  output$distPlot <- renderPlot({
-    
-    # generate bins based on input$bins from ui.R
-    x    <- faithful[, 2] 
-    bins <- seq(min(x), max(x), length.out = input$bins + 1)
-    
-    # draw the histogram with the specified number of bins
-    hist(x, breaks = bins, col = 'darkgray', border = 'white')
-    
+shinyServer(function(input, output, session) {
+  
+  output$sim_plots <- renderPlot({
+    # draw the simulated plots with dynamic parametes
+    withProgress({
+      setProgress(message = "Processing ...")
+      corona_explore(seq(input$b0v[1], input$b0v[2], by = b0v_step), 
+                     input$gammav, input$tmaxv[1]:input$tmaxv[2])
+    })
   })
   
 })
