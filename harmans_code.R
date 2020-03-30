@@ -36,16 +36,7 @@ corona_sim <- function(x) {
   b0 <- x[1] 
   gamma2 <- min(x[2], 1.4)  # Ak by som omylom zadal nealisticky velke
   # gamma2 > 1.4, spadme mi Rko (uz sa mi to stalo)
-  tmax <- max(x[3], 12) 
-  
-  # N ... celkovy pocet ludi v SR
-  N <- 5450000
-  
-  # a1 az a9 ... pomer ludi v SR v jednotlivych dekadach veku
-  a <- c(0.11, 0.10, 0.12, 0.16, 0.15, 0.13, 0.13, 0.07, 0.03)
-  
-  # pravdepodobosti umrtia v jednotlivych dekadach veku
-  p <- c(0.2, 0.2, 0.2, 0.2, 0.4, 1.3, 3.6, 8.0, 14.8)/100
+  tmax <- max(x[3], 12)
   
   # b1 az b9 ... parameter b rozdelenia Beta(1,b) maxima priznakov
   #              pre infikovanych v danych dekadach veku
@@ -56,10 +47,8 @@ corona_sim <- function(x) {
   # Ct ... pocty pozitivne testovanych ludi v SR od zaciatku epidemie
   # Tt ... pocty vsetkych testovanych ludi v SR od zaciatku epidemie
   # (zdroj: ezdravie.nczisk.sk/sk?category=COVID)
-  Ct <- c(0,0,0,0,1,2,2,2,0,3,
-          11,11,12,17,11,25,8,19,13,41,7,19,12,10,42)
-  Tt <- Ct + c(37,32,38,50,49,64,72,69,116,99,
-               35,118,197,228,148,293,217,283,354,399,235,432,464,325,912)
+  Ct <- positive_tested
+  Tt <- Ct + tested
   pred <- tmax - length(Ct)
   Ct <- c(rep(0, pred), Ct)
   Tt <- c(rep(0, pred), Tt)

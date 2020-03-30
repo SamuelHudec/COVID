@@ -1,7 +1,7 @@
 library(shiny)
 
 # load static parameters
-source("static_params.R")
+source("config")
 
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(

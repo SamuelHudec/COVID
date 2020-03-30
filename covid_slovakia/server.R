@@ -1,7 +1,7 @@
 library(shiny)
 
 # load static parameters
-source("static_params.R")
+source("config")
 
 # load neural functions
 source("../harmans_code.R")
@@ -14,8 +14,8 @@ shinyServer(function(input, output, session) {
     withProgress({
       setProgress(message = "Processing ...")
       corona_explore(seq(input$b0v[1], input$b0v[2], by = b0v_step), 
-                     input$gammav, input$tmaxv[1]:input$tmaxv[2])
+                     input$gammav, 
+                     seq(input$tmaxv[1], input$tmaxv[2], by = tmaxv_step))
     })
   })
-  
 })
