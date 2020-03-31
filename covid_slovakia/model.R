@@ -59,7 +59,7 @@ corona_sim <- function(x) {
   I <- matrix(0, nrow = 1, ncol = tmax + 1)
   I[1, tmax + 1] <- 1
   I.act <- 1; Nt <- rep(1, tmax)
-  start = Sys.time()
+  
   for (t in 2:tmax) {
     
     # Do nudzoveho stavu 12.3. bolo gamma niekde medzi 1.2 a 1.3
@@ -73,16 +73,13 @@ corona_sim <- function(x) {
   }
   Ni <- nrow(I)   
   #print(c("infikovanych spolu", Ni))
-  end = Sys.time()
-  print("Matrix preparing")
-  print(end - start)
+  
   # Ak je infikovanych nerealne vela, preskoc simulaciu, aby si nezdrzoval
   # V istom bode nebude 10000 nerealne vela...
   if (Ni > 10000)
     return(list(chyba = Inf, Ni = 10000, smrt = 15,
                 pp = 15, cZt = rep(0, tmax)))
   
-  start = Sys.time()
   # Pre kazdeho infikovaneho
   for (i in 1:Ni) {
     
@@ -116,9 +113,7 @@ corona_sim <- function(x) {
     }
     
   }
-  end = Sys.time()
-  print("Simulating individual")
-  print(end - start)
+  
   # Zratajme pocty umrti
   dth <- length((1:Ni)[I[, tmax] == -Inf])
   #print(c("umrtia", dth))
@@ -133,7 +128,6 @@ corona_sim <- function(x) {
   Zt <- rep(0, tmax)
   tzac <- min((1:tmax)[Tt > 0])
   
-  start = Sys.time()
   # Pre kazdy den:
   for (t in tzac:tmax) {
     
@@ -147,9 +141,6 @@ corona_sim <- function(x) {
       I[I[ ,t] >= krit, t:tmax] <- -I[I[ ,t] >= krit, t:tmax]
     }
   }
-  end = Sys.time()
-  print("simulate for every day")
-  print(end - start)
   
   # Percento pozitivnych testov
   pp <- round(100*mean(Zt[Tt > 0]/Tt[Tt > 0]))
@@ -163,7 +154,7 @@ corona_sim <- function(x) {
   
   # Nakresli priebeh, ale len ak nie je uplne odveci
   # (aby sme nezdrzovali opakovane simulacie kreslenim uletenych priebehov)
-  # start = Sys.time()
+  # toto žere rovnako kolko simulovanie
   # if (chyba < 40) {
   #   par(mfrow = c(1, 1))
   #   mxcum <- max(c(sum(Zt), sum(Ct)))
@@ -175,10 +166,6 @@ corona_sim <- function(x) {
   #   lines(Zt[tmax:1]/mx*mxcum, type = "b", lty = "dotted")
   #   lines(Ct[tmax:1]/mx*mxcum, type = "b", lty = "dotted", col = "red")
   # }
-  # end = Sys.time()
-  # print("ploting")
-  # print(end - start)
-  
   
   list(chyba = chyba, Ni = Ni, smrt = dth, pp = pp, cZt = cumsum(Zt))
 }

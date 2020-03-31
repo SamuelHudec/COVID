@@ -4,7 +4,7 @@ library(shiny)
 source("config.R")
 
 # load neural functions
-source("../harmans_code.R")
+source("model.R")
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output, session) {
