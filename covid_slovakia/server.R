@@ -1,7 +1,7 @@
 library(shiny)
 
 # load static parameters
-source("config")
+source("config.R")
 
 # load neural functions
 source("../harmans_code.R")

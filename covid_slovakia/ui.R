@@ -1,7 +1,7 @@
 library(shiny)
 
 # load static parameters
-source("config")
+source("config.R")
 
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(
@@ -15,17 +15,19 @@ shinyUI(fluidPage(
     sidebarPanel(
       sliderInput("b0v", 
                   label = h4("Slider for b0v"), 
-                  min = 50, 
-                  max = 200, 
+                  min = 30, 
+                  max = 300, 
                   value = c(60, 180),
                   step = b0v_step),
       numericInput("gammav", 
                    label = h4("Gammav"), 
                    value = 1.06,
+                   min = 0.7, 
+                   max = 1.3,
                    step = gammav_step),
       sliderInput("tmaxv", 
                   label = h4("Slider for tmaxv"), 
-                  min = 20, 
+                  min = 26, 
                   max = 45, 
                   value = c(25, 38),
                   step = tmaxv_step),
