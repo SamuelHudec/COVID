@@ -39,7 +39,16 @@ shinyUI(fluidPage(
     
     # Show a plot of the generated distribution
     mainPanel(
-       plotOutput("sim_plots")
-    )
+      plotlyOutput("sim_err"),
+      br(),
+      br(),
+      plotlyOutput("sim_tests"),
+      br(),
+      br(),
+      plotlyOutput("sim_infi"),
+      br(),
+      br(),
+      plotlyOutput("sim_deaths")
+     )
   )
 ))

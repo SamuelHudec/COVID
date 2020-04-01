@@ -198,22 +198,6 @@ corona_explore <- function(b0v, gammav, tmaxv) {
     }
   }
   
-  par(mfrow = c(2, 2))
-  image(1/(Vch[,1,]), main = paste("1/Err, gamma2 =", gammav[1]), x = b0v, y = tmaxv,
-        breaks = c(0.005, 0.01, 0.015, 0.02, 0.025, 0.03, 0.04),
-        col = hcl.colors(6))
-  contour(1/(Vch[,1,]), main = "1/chyba", x = b0v, y = tmaxv, add = TRUE,
-          levels = c(0.005, 0.01, 0.015, 0.02, 0.025, 0.03, 0.04))
-  image(Vpp[,1,], main = "pp", x = b0v, y = tmaxv,
-        breaks = c(0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5),
-        col = topo.colors(7))
-  contour(Vpp[,1,], main = "pp", x = b0v, y = tmaxv, add = TRUE)
-  image(VNi[,1,], main = "Ni", x = b0v, y = tmaxv)
-  contour(VNi[,1,], main = "Ni", x = b0v, y = tmaxv, add = TRUE)
-  image(Vs[,1,], main = "deaths", x = b0v, y = tmaxv,
-        breaks = c(-0.5, 0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 1000),
-        col = rev(gray.colors(10)))
-  contour(Vs[,1,], main = "deaths", x = b0v, y = tmaxv, add = TRUE)
-  
-  #return(V)
+  return(list(Vch = Vch, VNi = VNi, Vs = Vs, Vpp = Vpp))
+
 }

@@ -33,6 +33,8 @@ corona_sim <- function(x) {
   #        po vyhlaseni nudzoveho stavu 12.3. 
   # tmax ... vek epidemie na Slovensku k aktualnemu dnu
   
+  measure = FALSE
+  
   b0 <- x[1] 
   gamma2 <- min(x[2], 1.4)  # Ak by som omylom zadal nealisticky velke
   # gamma2 > 1.4, spadme mi Rko (uz sa mi to stalo)
@@ -59,7 +61,9 @@ corona_sim <- function(x) {
   I <- matrix(0, nrow = 1, ncol = tmax + 1)
   I[1, tmax + 1] <- 1
   I.act <- 1; Nt <- rep(1, tmax)
-  start = Sys.time()
+  
+  if (measure) start = Sys.time()
+  
   for (t in 2:tmax) {
     
     # Do nudzoveho stavu 12.3. bolo gamma niekde medzi 1.2 a 1.3
@@ -73,16 +77,18 @@ corona_sim <- function(x) {
   }
   Ni <- nrow(I)   
   #print(c("infikovanych spolu", Ni))
-  end = Sys.time()
-  print("Matrix preparing")
-  print(end - start)
+  if (measure){
+    end = Sys.time()
+    print("Matrix preparing")
+    print(end - start)
+  }
   # Ak je infikovanych nerealne vela, preskoc simulaciu, aby si nezdrzoval
   # V istom bode nebude 10000 nerealne vela...
   if (Ni > 10000)
     return(list(chyba = Inf, Ni = 10000, smrt = 15,
                 pp = 15, cZt = rep(0, tmax)))
   
-  start = Sys.time()
+  if (measure) start = Sys.time()
   # Pre kazdeho infikovaneho
   for (i in 1:Ni) {
     
@@ -116,9 +122,11 @@ corona_sim <- function(x) {
     }
     
   }
-  end = Sys.time()
-  print("Simulating individual")
-  print(end - start)
+  if (measure){
+    end = Sys.time()
+    print("Simulating individual")
+    print(end - start)
+  }
   # Zratajme pocty umrti
   dth <- length((1:Ni)[I[, tmax] == -Inf])
   #print(c("umrtia", dth))
@@ -133,7 +141,7 @@ corona_sim <- function(x) {
   Zt <- rep(0, tmax)
   tzac <- min((1:tmax)[Tt > 0])
   
-  start = Sys.time()
+  if (measure) start = Sys.time()
   # Pre kazdy den:
   for (t in tzac:tmax) {
     
@@ -147,9 +155,11 @@ corona_sim <- function(x) {
       I[I[ ,t] >= krit, t:tmax] <- -I[I[ ,t] >= krit, t:tmax]
     }
   }
-  end = Sys.time()
-  print("simulate for every day")
-  print(end - start)
+  if (measure){
+    end = Sys.time()
+    print("simulate for every day")
+    print(end - start)
+  }
   
   # Percento pozitivnych testov
   pp <- round(100*mean(Zt[Tt > 0]/Tt[Tt > 0]))
@@ -206,27 +216,9 @@ corona_explore <- function(b0v, gammav, tmaxv) {
         VNi[ib0, igamma, itmax] <- min(c(res1$Ni, 15000))
         Vs[ib0, igamma, itmax] <- min(c(psmrt, 15))
         Vpp[ib0, igamma, itmax] <- min(c(ppp, 15))
-        k <- k + 1; #print(round(100*k/Nsim))
+        # k <- k + 1; print(round(100*k/Nsim))
       }
     }
   }
-  
-  par(mfrow = c(2, 2))
-  image(1/(Vch[,1,]), main = paste("1/Err, gamma2 =", gammav[1]), x = b0v, y = tmaxv,
-        breaks = c(0.005, 0.01, 0.015, 0.02, 0.025, 0.03, 0.04),
-        col = hcl.colors(6))
-  contour(1/(Vch[,1,]), main = "1/chyba", x = b0v, y = tmaxv, add = TRUE,
-          levels = c(0.005, 0.01, 0.015, 0.02, 0.025, 0.03, 0.04))
-  image(Vpp[,1,], main = "pp", x = b0v, y = tmaxv,
-        breaks = c(0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5),
-        col = topo.colors(7))
-  contour(Vpp[,1,], main = "pp", x = b0v, y = tmaxv, add = TRUE)
-  image(VNi[,1,], main = "Ni", x = b0v, y = tmaxv)
-  contour(VNi[,1,], main = "Ni", x = b0v, y = tmaxv, add = TRUE)
-  image(Vs[,1,], main = "deaths", x = b0v, y = tmaxv,
-        breaks = c(-0.5, 0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 1000),
-        col = rev(gray.colors(10)))
-  contour(Vs[,1,], main = "deaths", x = b0v, y = tmaxv, add = TRUE)
-  
-  #return(V)
+  return(list(Vch = Vch, VNi = VNi, Vs = Vs, Vpp = Vpp))
 }
