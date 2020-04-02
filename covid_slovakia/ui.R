@@ -34,7 +34,7 @@ shinyUI(fluidPage(
       submitButton("Apply", icon("refresh")),
       br(),
       hr(),
-      p("Radoslav Harman")
+      p("By Math Knights")
     ),
     
     # Show a plot of the generated distribution
