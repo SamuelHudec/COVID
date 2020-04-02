@@ -167,7 +167,14 @@ corona_sim <- function(x) {
   #   lines(Ct[tmax:1]/mx*mxcum, type = "b", lty = "dotted", col = "red")
   # }
   
-  list(chyba = chyba, Ni = Ni, smrt = dth, pp = pp, cZt = cumsum(Zt))
+  return(list(chyba = chyba, 
+              Ni = Ni, 
+              smrt = dth, 
+              pp = pp, 
+              Zt = Zt,
+              Ct = Ct,
+              Ztv = Ztv,
+              Ctv = Ctv))
 }
 
 corona_explore <- function(b0v, gammav, tmaxv) {

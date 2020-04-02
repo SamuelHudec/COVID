@@ -1,5 +1,6 @@
 install.packages(c("plotly", "ggplot2"))
 library(plotly)
+library(tidyverse)
 
 # This is developers playground
 
@@ -42,7 +43,62 @@ print(end - start) # expensive simulations
 # without plotting
 # Time difference of 28.99935 secs
 
-# plotting ####
+# plotting best fit plot -> plotly ####
+
+source("covid_slovakia/config.R")
+source("harmans_code.R")
+
+b0 = 150
+gamma = 1.04
+tmax = 31
+juu = corona_sim(c(b0, gamma, tmax))
+
+Zt = juu$Zt
+Ct = juu$Ct
+Ztv = juu$Ztv
+Ctv = juu$Ctv
+chyba = juu$chyba
+
+# old
+mxcum <- max(c(sum(Zt), sum(Ct)))
+plot(cumsum(Zt), type = "b", pch = 19, ylim = c(0, mxcum),
+     main = paste(b0, "|", gamma, "|", tmax, "|",
+                  "|", sum(Zt), "|", round(chyba, 2)))
+points(cumsum(Ct), pch = 19, type = "b", col = "red")
+
+mx <- max(c(Zt, Ct))
+lines(Zt[tmax:1]/mx*mxcum, type = "b", lty = "dotted")
+lines(Ct[tmax:1]/mx*mxcum, type = "b", lty = "dotted", col = "red")
+
+# new
+df = data.frame(days = 1:length(Zt), actual = cumsum(Ct), fit = cumsum(Zt),
+             Zt = Zt, Ct = Ct)
+ggplotly(
+df %>% select(days, actual, fit) %>% 
+  gather("legend", "value", -days) %>%
+  ggplot(aes(x = days, y = value, col = legend)) +
+  theme_minimal() +
+  labs(y = "Počet infikovaných cumulatívne",
+       x = "dni") +
+  geom_point() + 
+  geom_line()
+)
+
+df %>% select(days, Ct, Zt) %>% 
+  gather("legend", "value", -days) %>%
+  ggplot(aes(x = days, y = value, col = legend)) +
+  theme_minimal() +
+  labs(y = "Počet infikovaných denne",
+       x = "dni") +
+  geom_point() + 
+  geom_line()
+
+
+
+
+
+#
+# plotting image -> plotly ####
 
 # run one simulation
 source("covid_slovakia/config.R")
@@ -58,6 +114,11 @@ Vpp = juu$Vpp
 VNi = juu$VNi
 Vs = juu$Vs
 
+cor = which(1/(Vch[,1,]) == max(1/(Vch[,1,])), arr.ind = TRUE)
+# b0
+cor[1]
+# tmax
+cor[2]
 
 # old
 image(1/(Vch[,1,]), main = paste("1/Err, gamma2 =", gammav[1]), x = b0v, y = tmaxv,

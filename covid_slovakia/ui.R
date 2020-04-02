@@ -48,7 +48,13 @@ shinyUI(fluidPage(
       plotlyOutput("sim_infi"),
       br(),
       br(),
-      plotlyOutput("sim_deaths")
+      plotlyOutput("sim_deaths"),
+      br(),
+      br(),
+      plotlyOutput("best_fit_1"),
+      br(),
+      br(),
+      plotlyOutput("best_fit_2")
      )
   )
 ))

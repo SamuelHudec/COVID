@@ -1,4 +1,5 @@
 library(shiny)
+library(tidyverse)
 library(plotly)
 
 # load static parameters
@@ -25,10 +26,25 @@ shinyServer(function(input, output, session) {
     withProgress({
       setProgress(message = "Processing ...")
       sims = corona_explore(b0v(),
-                     input$gammav, 
-                     tmaxv())
+                            input$gammav, 
+                            tmaxv())
       sims
     })
+  })
+  
+  # reactive fitting
+  fit_data = reactive({
+    Vch = sim_data()$Vch[,1,]
+    cor = which(1/Vch == max(1/Vch), arr.ind = TRUE)
+    # params
+    b0 = b0v()[cor[1]]
+    tmax = tmaxv()[cor[2]]
+    fit = corona_sim(c(b0, input$gammav, tmax))
+    df = data.frame(days = 1:length(fit$Zt), 
+                    actual = cumsum(fit$Ct), 
+                    fit = cumsum(fit$Zt),
+                    Zt = fit$Zt, Ct = fit$Ct)
+    df
   })
   
   # plotting part
@@ -71,5 +87,31 @@ shinyServer(function(input, output, session) {
       layout(title = paste("Počet umrti, gamma2 =", input$gammav),
              xaxis = list(title = "tmaxv"),
              yaxis = list(title = "b0v"))
+  })
+  
+  output$best_fit_1 <- renderPlotly({
+    ggplotly(
+      fit_data() %>% select(days, actual, fit) %>% 
+        gather("legend", "value", -days) %>%
+        ggplot(aes(x = days, y = value, col = legend)) +
+        theme_minimal() +
+        labs(y = "Počet infikovaných cumulatívne",
+             x = "dni") +
+        geom_point() + 
+        geom_line()
+    ) %>% layout(title = paste("Najlepší Fit cummulatívne"))
+  })
+  
+  output$best_fit_2 <- renderPlotly({
+    ggplotly(
+      fit_data() %>% select(days, Ct, Zt) %>% 
+        gather("legend", "value", -days) %>%
+        ggplot(aes(x = days, y = value, col = legend)) +
+        theme_minimal() +
+        labs(y = "Počet infikovaných denne",
+             x = "dni") +
+        geom_point() + 
+        geom_line()
+    ) %>% layout(title = paste("Najlepší Fit denne"))
   })
 })

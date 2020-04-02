@@ -166,31 +166,18 @@ corona_sim <- function(x) {
   #print(c("percento pozitivnych testov", pp))
   
   # Chybu simulacie zratame porovnanim s pozorovanymi vysledkami testov
-  # Cislo 20 sa zvysuje kazdy den o 1. Chcelo by to krajsie napisat
   Ztv <- cumsum(Zt[(tmax - 20):tmax])
   Ctv <- cumsum(Ct[(tmax - 20):tmax])
   chyba <- sum((Ctv - Ztv)^2/Ctv)
   
-  # Nakresli priebeh, ale len ak nie je uplne odveci
-  # (aby sme nezdrzovali opakovane simulacie kreslenim uletenych priebehov)
-  # start = Sys.time()
-  # if (chyba < 40) {
-  #   par(mfrow = c(1, 1))
-  #   mxcum <- max(c(sum(Zt), sum(Ct)))
-  #   plot(cumsum(Zt), type = "b", pch = 19, ylim = c(0, mxcum),
-  #        main = paste(b0, "|", gamma, "|", tmax, "|", Ni, 
-  #                     "|", sum(Zt), "|", round(chyba, 2)))
-  #   points(cumsum(Ct), pch = 19, type = "b", col = "red")
-  #   mx <- max(c(Zt, Ct))
-  #   lines(Zt[tmax:1]/mx*mxcum, type = "b", lty = "dotted")
-  #   lines(Ct[tmax:1]/mx*mxcum, type = "b", lty = "dotted", col = "red")
-  # }
-  # end = Sys.time()
-  # print("ploting")
-  # print(end - start)
-  
-  
-  list(chyba = chyba, Ni = Ni, smrt = dth, pp = pp, cZt = cumsum(Zt))
+  return(list(chyba = chyba, 
+       Ni = Ni, 
+       smrt = dth, 
+       pp = pp, 
+       Zt = Zt,
+       Ct = Ct,
+       Ztv = Ztv,
+       Ctv = Ctv))
 }
 
 corona_explore <- function(b0v, gammav, tmaxv) {
