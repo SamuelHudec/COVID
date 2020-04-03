@@ -1,4 +1,5 @@
 library(shiny)
+library(plotly)
 
 # load static parameters
 source("config.R")
