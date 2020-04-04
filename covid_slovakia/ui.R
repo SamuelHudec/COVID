@@ -13,12 +13,13 @@ shinyUI(fluidPage(
   
   # Sidebar with a slider input for number of bins 
   sidebarLayout(
+    
     sidebarPanel(
       sliderInput("b0v", 
                   label = h4("Slider for b0v"), 
                   min = 30, 
-                  max = 300, 
-                  value = c(60, 180),
+                  max = 400, 
+                  value = c(44, 80),
                   step = b0v_step),
       numericInput("gammav", 
                    label = h4("Gammav"), 
@@ -30,7 +31,7 @@ shinyUI(fluidPage(
                   label = h4("Slider for tmaxv"), 
                   min = 26, 
                   max = 45, 
-                  value = c(25, 38),
+                  value = c(25, 30),
                   step = tmaxv_step),
       submitButton("Apply", icon("refresh")),
       br(),
@@ -40,22 +41,29 @@ shinyUI(fluidPage(
     
     # Show a plot of the generated distribution
     mainPanel(
-      plotlyOutput("sim_err"),
-      br(),
-      br(),
-      plotlyOutput("sim_tests"),
-      br(),
-      br(),
-      plotlyOutput("sim_infi"),
-      br(),
-      br(),
-      plotlyOutput("sim_deaths"),
-      br(),
-      br(),
-      plotlyOutput("best_fit_1"),
-      br(),
-      br(),
-      plotlyOutput("best_fit_2")
-     )
+      tabsetPanel(id="tabb",
+        tabPanel("Grid", icon = icon("dna"),
+          br(),
+          plotlyOutput("sim_err"),
+          br(),
+          br(),
+          plotlyOutput("sim_tests"),
+          br(),
+          br(),
+          plotlyOutput("sim_infi"),
+          br(),
+          br(),
+          plotlyOutput("sim_deaths")
+        ),
+        tabPanel("Fit", icon = icon("chart-line"),
+          br(),
+          plotlyOutput("best_fit_1"),
+          br(),
+          br(),
+          plotlyOutput("best_fit_2")
+          )
+        )
+      )
+    )
   )
-))
+)
