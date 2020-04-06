@@ -45,11 +45,11 @@ shinyServer(function(input, output, session) {
   })
   
   # update control panel for one fit by best parameters
-  observe({
+  observeEvent(input$send_params, {
     updateNumericInput(session, "b0", value = best_params()[1])
     updateNumericInput(session, "gamma", value = best_params()[2])
     updateNumericInput(session, "tmax", value = best_params()[3])
-    })
+    }, ignoreInit = TRUE)
   
   # reactive one model fit
   fit_data = reactive({
