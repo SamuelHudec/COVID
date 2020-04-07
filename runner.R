@@ -171,10 +171,71 @@ plot_ly(x = tmaxv, y = b0v, z = Vs[,1,], type = "contour",
          xaxis = list(title = "tmaxv"), 
          yaxis = list(title = "b0v"))
 
-# text output
+# text output ####
 
 read_lines('covid_slovakia/config.R') -> ju
 juu = numeric(length(ju))
 for(i in 1:length(ju)){
   juu[i] = paste(ju[i], "\n")
 }
+
+
+
+
+# corona 2 ####
+source("harmans_code_2.R")
+jup = corona_sim2(9, c(080, 1.25, 11), c(080, 0.95, Inf), 100, pic = T)
+errv = jup$errv 
+I1 = jup$I1 
+I = jup$I 
+tmax = jup$tmax
+
+# old plots
+
+# a) Priebeh odhalenych pripadov: skutocnych a pre najlepsi fit
+rad1 <- hist(I1[, tmax + 5], 
+             breaks = 0:(tmax + 1) - 0.5, 
+             plot = FALSE)$counts[2:(tmax + 1)]
+rad1c <- cumsum(rad1)
+Ctc <- cumsum(Ct)
+mx <- max(c(rad1c[tmax], Ctc[tmax]))
+plot(Ctc, type = "b", pch = 19, ylim = c(0, mx), col = "red",
+     main = "Kum. pozitivne testy", ylab = "pocet", xlab = "cas")
+grid(col = "black")
+lines(rad1c, pch = 1, type = "b", col = "red")
+
+# b) Simulovany kumulatívny priebeh skutocneho poctu nakazenych
+I1.boliI <- matrix(0, nrow = nrow(I1), ncol = tmax)
+for (i in 1:nrow(I1)) I1.boliI[i, ] <- sign(cumsum(abs(I1[i, 1:tmax])))
+rad1 <- apply(I1.boliI, 2, sum)
+# Toto je odhad pre kpsi posunuty o den
+plot(0:(tmax - 1), rad1, pch = 1, col = "red",
+     main = "Kum. symp. infikovani", type = "b",
+     ylab = "pocet", xlab = "cas")
+grid(col = "black")
+
+# c) Simulovane aktualne pocty ludi s intenzitami nad 3 prahy: 0, 0.25, 0.5
+# Nad prahom 0 su vsetci symptomaticky infikovani, nad 0.25 vazni, nad 0.5 mrtvi
+I1.su51 <- I1.su26 <- I1.su01 <- matrix(0, nrow = nrow(I1), ncol = tmax)
+for (i in 1:nrow(I1)) {
+  I1.su01[i, ] <- sign(as.integer(I1[i, 1:tmax] != 0))
+  I1.su26[i, ] <- sign(as.integer(abs(I1[i, 1:tmax]) > 0.25))
+  I1.su51[i, ] <- sign(as.integer(abs(I1[i, 1:tmax]) > 0.51))
+}
+rad1 <- apply(I1.su01, 2, sum)
+rad2 <- apply(I1.su26, 2, sum)
+rad3 <- apply(I1.su51, 2, sum)
+plot(rad1, pch = 1, main = "Akt. symp. infikovani", type = "b",
+     ylab = "pocet", xlab = "cas", col = "red")
+grid(col = "black")
+lines(rad2, pch = 1, type = "b", col = "magenta")
+lines(rad3, pch = 1, type = "b", col = "black")
+
+# d) Odhad distribucie vekov pozitivne testovanych
+rad1 <- sign(I[, tmax + 5])*I[, tmax + 2]
+hist(rad1[rad1 != 0], breaks = 1:10 - 0.5, labels = TRUE,
+     main = "Odhad veku pozit. test.",
+     xlab = "dekada veku", ylab = "pocet")
+
+
+
