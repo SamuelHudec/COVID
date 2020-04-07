@@ -132,4 +132,15 @@ shinyServer(function(input, output, session) {
         geom_line()
     ) %>% layout(title = paste("Najlepší Fit denne"))
   })
+  
+  # code output
+  
+  output$string_code <- renderUI({
+    read_lines('model.R') -> ju
+    juu = numeric(length(ju))
+    for(i in 1:length(ju)){
+      juu[i] = paste(ju[i], "<br/>")
+    }
+    HTML(juu)
+  })
 })

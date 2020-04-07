@@ -105,7 +105,7 @@ shinyUI(fluidPage(
           icon = icon("dna"), value = "gridd"
             ),
         tabPanel(title = "Code",
-           p("to be add"),
+           htmlOutput("string_code"),
            icon = icon("code-branch"), value = "code"
           )
         )

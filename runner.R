@@ -170,3 +170,11 @@ plot_ly(x = tmaxv, y = b0v, z = Vs[,1,], type = "contour",
   layout(title = paste("Počet umrti, gamma2 =", gammav[1]), 
          xaxis = list(title = "tmaxv"), 
          yaxis = list(title = "b0v"))
+
+# text output
+
+read_lines('covid_slovakia/config.R') -> ju
+juu = numeric(length(ju))
+for(i in 1:length(ju)){
+  juu[i] = paste(ju[i], "\n")
+}
