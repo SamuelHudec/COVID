@@ -189,9 +189,10 @@ errv = jup$errv
 I1 = jup$I1 
 I = jup$I 
 tmax = jup$tmax
+Ct = jup$Ct
 
-# old plots
 
+## old
 # a) Priebeh odhalenych pripadov: skutocnych a pre najlepsi fit
 rad1 <- hist(I1[, tmax + 5], 
              breaks = 0:(tmax + 1) - 0.5, 
@@ -199,21 +200,56 @@ rad1 <- hist(I1[, tmax + 5],
 rad1c <- cumsum(rad1)
 Ctc <- cumsum(Ct)
 mx <- max(c(rad1c[tmax], Ctc[tmax]))
+
 plot(Ctc, type = "b", pch = 19, ylim = c(0, mx), col = "red",
      main = "Kum. pozitivne testy", ylab = "pocet", xlab = "cas")
 grid(col = "black")
 lines(rad1c, pch = 1, type = "b", col = "red")
 
+## new
+
+df = data.frame(days = 1:length(rad1), actual = Ctc, fit = rad1c)
+
+ggplotly(
+  df %>% select(days, actual, fit) %>% 
+    gather("legend", "value", -days) %>%
+    ggplot(aes(x = days, y = value, col = legend)) +
+    theme_minimal() +
+    labs(y = "Počet pozitivnych testov",
+         x = "dni") +
+    geom_point() + 
+    geom_line()
+)
+
+## old
 # b) Simulovany kumulatívny priebeh skutocneho poctu nakazenych
 I1.boliI <- matrix(0, nrow = nrow(I1), ncol = tmax)
 for (i in 1:nrow(I1)) I1.boliI[i, ] <- sign(cumsum(abs(I1[i, 1:tmax])))
 rad1 <- apply(I1.boliI, 2, sum)
+
 # Toto je odhad pre kpsi posunuty o den
 plot(0:(tmax - 1), rad1, pch = 1, col = "red",
      main = "Kum. symp. infikovani", type = "b",
      ylab = "pocet", xlab = "cas")
 grid(col = "black")
 
+## new
+
+df = data.frame(days = 0:(tmax - 1), inf = rad1)
+
+ggplotly(
+df %>% ggplot(aes(x = days, y = inf)) + 
+  theme_minimal() +
+  labs(y = "Počet symp. infikovaných",
+       x = "dni") +
+  geom_point(alpha = 0.6) + 
+  geom_line()
+)
+
+
+
+
+## old
 # c) Simulovane aktualne pocty ludi s intenzitami nad 3 prahy: 0, 0.25, 0.5
 # Nad prahom 0 su vsetci symptomaticky infikovani, nad 0.25 vazni, nad 0.5 mrtvi
 I1.su51 <- I1.su26 <- I1.su01 <- matrix(0, nrow = nrow(I1), ncol = tmax)
@@ -225,17 +261,122 @@ for (i in 1:nrow(I1)) {
 rad1 <- apply(I1.su01, 2, sum)
 rad2 <- apply(I1.su26, 2, sum)
 rad3 <- apply(I1.su51, 2, sum)
+
 plot(rad1, pch = 1, main = "Akt. symp. infikovani", type = "b",
      ylab = "pocet", xlab = "cas", col = "red")
 grid(col = "black")
 lines(rad2, pch = 1, type = "b", col = "magenta")
 lines(rad3, pch = 1, type = "b", col = "black")
 
+
+
+## new
+df = data.frame(days = 1:tmax, I1.su01 = rad1, I1.su26 = rad2, I1.su51 = rad3)
+
+ggplotly(
+  df %>% select(days, I1.su01, I1.su26, I1.su51) %>% 
+    gather("legend", "value", -days) %>%
+    ggplot(aes(x = days, y = value, col = legend)) +
+    theme_minimal() +
+    labs(y = "Počet Akt. symp. infikovaných",
+         x = "dni") +
+    geom_point(alpha = 0.6) + 
+    geom_line()
+)
+
+## old
 # d) Odhad distribucie vekov pozitivne testovanych
 rad1 <- sign(I[, tmax + 5])*I[, tmax + 2]
 hist(rad1[rad1 != 0], breaks = 1:10 - 0.5, labels = TRUE,
      main = "Odhad veku pozit. test.",
      xlab = "dekada veku", ylab = "pocet")
+
+## new
+df = data.frame(hist = rad1[rad1 != 0])
+ggplotly(
+df %>% ggplot(aes(x = hist)) + 
+  geom_histogram(bins = 9) + 
+  theme_minimal() + 
+  labs(x = "Odhad veku pozit. test (dekada veku)")
+)
+
+
+## togeather
+
+
+## old
+# a) Priebeh odhalenych pripadov: skutocnych a pre najlepsi fit
+rad1 <- hist(I1[, tmax + 5], 
+             breaks = 0:(tmax + 1) - 0.5, 
+             plot = FALSE)$counts[2:(tmax + 1)]
+fit <- cumsum(rad1)
+Ctc <- cumsum(Ct)
+
+I1.boliI <- matrix(0, nrow = nrow(I1), ncol = tmax)
+for (i in 1:nrow(I1)) I1.boliI[i, ] <- sign(cumsum(abs(I1[i, 1:tmax])))
+I1.boliI <- apply(I1.boliI, 2, sum)
+
+I1.su51 <- I1.su26 <- I1.su01 <- matrix(0, nrow = nrow(I1), ncol = tmax)
+for (i in 1:nrow(I1)) {
+  I1.su01[i, ] <- sign(as.integer(I1[i, 1:tmax] != 0))
+  I1.su26[i, ] <- sign(as.integer(abs(I1[i, 1:tmax]) > 0.25))
+  I1.su51[i, ] <- sign(as.integer(abs(I1[i, 1:tmax]) > 0.51))
+}
+I1.su01 <- apply(I1.su01, 2, sum)
+I1.su26 <- apply(I1.su26, 2, sum)
+I1.su51 <- apply(I1.su51, 2, sum)
+
+
+
+df = data.frame(days = 1:tmax, actual = Ctc, fit = rad1c,
+                days0 = 0:(tmax - 1), inf = I1.boliI,
+                I1.su01 = I1.su01, I1.su26 = I1.su26, I1.su51 = I1.su51)
+
+ggplotly(
+  df %>% select(days, actual, fit) %>% 
+    gather("legend", "value", -days) %>%
+    ggplot(aes(x = days, y = value, col = legend)) +
+    theme_minimal() +
+    labs(y = "Počet pozitivnych testov",
+         x = "dni") +
+    geom_point() + 
+    geom_line()
+)
+
+ggplotly(
+  df %>% 
+    ggplot(aes(x = days0, y = inf)) + 
+    theme_minimal() +
+    labs(y = "Počet symp. infikovaných",
+         x = "dni") +
+    geom_point(alpha = 0.6) + 
+    geom_line()
+)
+
+ggplotly(
+  df %>% select(days, I1.su01, I1.su26, I1.su51) %>% 
+    gather("legend", "value", -days) %>%
+    ggplot(aes(x = days, y = value, col = legend)) +
+    theme_minimal() +
+    labs(y = "Počet Akt. symp. infikovaných",
+         x = "dni") +
+    geom_point(alpha = 0.6) + 
+    geom_line()
+)
+
+
+his <- sign(I[, tmax + 5])*I[, tmax + 2]
+
+df = data.frame(hist = his[his != 0])
+
+ggplotly(
+  df %>% ggplot(aes(x = his)) + 
+    geom_histogram(bins = 9) + 
+    theme_minimal() + 
+    labs(x = "Odhad veku pozit. test (dekada veku)")
+)
+
+
 
 
 

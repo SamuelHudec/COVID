@@ -278,7 +278,6 @@ corona_sim2 <- function(pred, x1, x2, n, pic = TRUE) {
     rad1c <- cumsum(rad1)
     Ctc <- cumsum(Ct)
     mx <- max(c(rad1c[tmax], Ctc[tmax]))
-    print(c(rad1c[tmax], Ctc[tmax]))
     plot(Ctc, type = "b", pch = 19, ylim = c(0, mx), col = "red",
         main = "Kum. pozitivne testy", ylab = "pocet", xlab = "cas")
     grid(col = "black")
@@ -320,7 +319,7 @@ corona_sim2 <- function(pred, x1, x2, n, pic = TRUE) {
   }
   
   # Vratime do pripadneho master optimalizacneho programu vektor chyb
-  return(list(errv = errv, I1 = I1, I = I, tmax = tmax))
+  return(list(errv = errv, I1 = I1, I = I, tmax = tmax, Ct = Ct))
 }
 
 corona_explore2 <- function(b0v, gammav, predv, n) {
