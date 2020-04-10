@@ -184,9 +184,8 @@ for(i in 1:length(ju)){
 
 # corona 2 ####
 source("harmans_code_2.R")
-jup = corona_sim2(9, c(080, 1.25, 11), c(080, 0.95, Inf), 100, pic = T)
-errv = jup$errv 
-I1 = jup$I1 
+jup = corona_sim2(9, c(080, 1.25, 11), c(080, 0.95, Inf), 5, pic = T)
+I1 = jup$I1
 I = jup$I 
 tmax = jup$tmax
 Ct = jup$Ct
@@ -302,10 +301,6 @@ df %>% ggplot(aes(x = hist)) +
 
 
 ## togeather
-
-
-## old
-# a) Priebeh odhalenych pripadov: skutocnych a pre najlepsi fit
 rad1 <- hist(I1[, tmax + 5], 
              breaks = 0:(tmax + 1) - 0.5, 
              plot = FALSE)$counts[2:(tmax + 1)]
@@ -378,5 +373,35 @@ ggplotly(
 
 
 
+# run grid search
+source("harmans_code_2.R")
+source("covid_slovakia/model2.R")
+start = Sys.time()
+ju = corona_explore2(predv = 1:5, 
+                     b0v = seq(100, 420, by = 10), 
+                     gamma1 = 1.25, 
+                     fin1 = 11, 
+                     gamma2 = 1.06, 
+                     n = 5)
+end = Sys.time()
+print(end - start) # expensive simulations
+
+# old
+
+b0v = seq(100, 420, by = 15)
+predv = 1:5
+n = 5
+gamma = 1.06
+
+filled.contour(ju, x = b0v, y = predv, levels = 0:n,
+               plot.title = title(main = paste("Fit, gamma2 =", gamma),
+                                  xlab = "b0", ylab = "pred"))
+
+# new
+plot_ly(y = predv, x = b0v, z = t(1/ju), type = "contour",
+        contours = list(showlabels = TRUE)) %>% 
+  layout(title = paste("Best Fit Map"), 
+         xaxis = list(title = "b0v"), 
+         yaxis = list(title = "predv"))
 
 

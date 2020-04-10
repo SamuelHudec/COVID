@@ -260,68 +260,10 @@ corona_sim2 <- function(pred, x1, x2, n, pic = TRUE) {
     
   }
   
-  # Logika grafov:
-  # - cervena sa tyka pozitivnych
-  # - magenta sa tyka kritickych
-  # - zelena sa tyka uzdravenych (v grafoch v buducnosti)
-  # - cierna sa type mrtvych
-  # - prazdny kruzok alebo bar zobrazuje simulacny odhad
-  # - plny kruzok alebo bar sa zobrazuje pozorovane udaje
-  
-  
-  if (pic) {
-    par(mfrow = c(2, 2))
-    # a) Priebeh odhalenych pripadov: skutocnych a pre najlepsi fit
-    rad1 <- hist(I1[, tmax + 5], 
-                 breaks = 0:(tmax + 1) - 0.5, 
-                 plot = FALSE)$counts[2:(tmax + 1)]
-    rad1c <- cumsum(rad1)
-    Ctc <- cumsum(Ct)
-    mx <- max(c(rad1c[tmax], Ctc[tmax]))
-    plot(Ctc, type = "b", pch = 19, ylim = c(0, mx), col = "red",
-        main = "Kum. pozitivne testy", ylab = "pocet", xlab = "cas")
-    grid(col = "black")
-    lines(rad1c, pch = 1, type = "b", col = "red")
-                 
-    # b) Simulovany kumulatívny priebeh skutocneho poctu nakazenych
-    I1.boliI <- matrix(0, nrow = nrow(I1), ncol = tmax)
-    for (i in 1:nrow(I1)) I1.boliI[i, ] <- sign(cumsum(abs(I1[i, 1:tmax])))
-    rad1 <- apply(I1.boliI, 2, sum)
-    # Toto je odhad pre kpsi posunuty o den
-    plot(0:(tmax - 1), rad1, pch = 1, col = "red",
-        main = "Kum. symp. infikovani", type = "b",
-        ylab = "pocet", xlab = "cas")
-    grid(col = "black")
-                 
-    # c) Simulovane aktualne pocty ludi s intenzitami nad 3 prahy: 0, 0.25, 0.5
-    # Nad prahom 0 su vsetci symptomaticky infikovani, nad 0.25 vazni, nad 0.5 mrtvi
-    I1.su51 <- I1.su26 <- I1.su01 <- matrix(0, nrow = nrow(I1), ncol = tmax)
-    for (i in 1:nrow(I1)) {
-     I1.su01[i, ] <- sign(as.integer(I1[i, 1:tmax] != 0))
-     I1.su26[i, ] <- sign(as.integer(abs(I1[i, 1:tmax]) > 0.25))
-     I1.su51[i, ] <- sign(as.integer(abs(I1[i, 1:tmax]) > 0.51))
-    }
-    rad1 <- apply(I1.su01, 2, sum)
-    rad2 <- apply(I1.su26, 2, sum)
-    rad3 <- apply(I1.su51, 2, sum)
-    plot(rad1, pch = 1, main = "Akt. symp. infikovani", type = "b",
-        ylab = "pocet", xlab = "cas", col = "red")
-    grid(col = "black")
-    lines(rad2, pch = 1, type = "b", col = "magenta")
-    lines(rad3, pch = 1, type = "b", col = "black")
-                 
-    # d) Odhad distribucie vekov pozitivne testovanych
-    rad1 <- sign(I[, tmax + 5])*I[, tmax + 2]
-    hist(rad1[rad1 != 0], breaks = 1:10 - 0.5, labels = TRUE,
-        main = "Odhad veku pozit. test.",
-        xlab = "dekada veku", ylab = "pocet")
-    par(mfrow = c(1, 1))              
-  }
-  
   # Vratime do pripadneho master optimalizacneho programu vektor chyb
-  if(pic)
-    {return(list(I1 = I1, I = I, tmax = tmax, Ct = Ct))}
-  else {return(errv)}
+  if(pic){
+    return(list(I1 = I1, I = I, tmax = tmax, Ct = Ct))
+  }else{return(errv)}
   
 }
 
@@ -332,7 +274,6 @@ corona_explore2 <- function(predv, b0v, gamma1, fin1, gamma2, n) {
   # Spusti napriklad corona_explore2(seq(30, 420, by = 15), 1.06, 1:20, 10)
   
   dm <- c(length(b0v), length(predv))
-  #Nsim <- prod(dm); k <- 0
   Vfit <- array(0, dim = dm)
   for (ib0 in 1:length(b0v)) {
     for (ipred in 1:length(predv)) {
@@ -340,9 +281,7 @@ corona_explore2 <- function(predv, b0v, gamma1, fin1, gamma2, n) {
                          c(b0v[ib0], gamma1, fin1),
                          c(b0v[ib0], gamma2, Inf), n, FALSE)
       Vfit[ib0, ipred] <- mean(res) # alebo sum(res < 1)
-      #k <- k + 1; print(paste(round(100*k/Nsim), "%"))
     }
   }
-  
   return(Vfit)
 }
