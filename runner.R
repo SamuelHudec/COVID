@@ -403,3 +403,6 @@ plot_ly(y = predv, x = b0v, z = t(1/ju), type = "contour",
          yaxis = list(title = "predv"))
 
 
+Vch = t(ju)
+cor = which(1/Vch == max(1/Vch), arr.ind = TRUE)
+c(predv[cor[1]], b0v[cor[2]])

@@ -12,22 +12,23 @@ source("model2.R")
 shinyServer(function(input, output, session) {
   # one model controls ####
   # extract best parameters from grid
-  # best_params = reactive({
-  #   Vch = sim_data()$Vch
-  #   cor = which(1/Vch == max(1/Vch), arr.ind = TRUE)
-  #   c(predv()[cor[1]], b0v()[cor[2]], input$gamma1v, 
-  #     input$fin1v, input$gamma2v,input$n_simv,)
-  # })
-  # 
+  best_params = reactive({
+    Vch = t(sim_data())
+    cor = which(1/Vch == max(1/Vch), arr.ind = TRUE)
+    
+    c(predv()[cor[1]], b0v()[cor[2]], input$gamma1v,
+      input$fin1v, input$gamma2v, input$n_simv)
+  })
+
   # update control panel for one fit by best parameters
-  # observeEvent(input$send_params, {
-  #   updateNumericInput(session, "pred", value = best_params()[1])
-  #   updateNumericInput(session, "b0", value = best_params()[2])
-  #   updateNumericInput(session, "gamma1", value = best_params()[3])
-  #   updateNumericInput(session, "fin1", value = best_params()[4])
-  #   updateNumericInput(session, "gamma2", value = best_params()[5])
-  #   updateNumericInput(session, "n_sim", value = best_params()[6])
-  # }, ignoreInit = TRUE)
+  observeEvent(input$send_params, {
+    updateNumericInput(session, "pred", value = best_params()[1])
+    updateNumericInput(session, "b0", value = best_params()[2])
+    updateNumericInput(session, "gamma1", value = best_params()[3])
+    updateNumericInput(session, "fin1", value = best_params()[4])
+    updateNumericInput(session, "gamma2", value = best_params()[5])
+    updateNumericInput(session, "n_sim", value = best_params()[6])
+  }, ignoreInit = TRUE)
   
   # reactive one model fit
   fit_data = reactive({
@@ -68,7 +69,7 @@ shinyServer(function(input, output, session) {
       I1.su26 <- apply(I1.su26, 2, sum)
       I1.su51 <- apply(I1.su51, 2, sum)
       
-     # his <- sign(ii[, tmaxx + 5])*ii[, tmaxx + 2]
+      his <- sign(ii[, tmaxx + 5])*ii[, tmaxx + 2]
       
       # put togeather
       df1 = data.frame(days = 1:tmaxx, actual = Ctc, fit = rad1c,
@@ -168,7 +169,7 @@ shinyServer(function(input, output, session) {
     s = sim_data()
     plot_ly(y = predv(), x = b0v(), z = t(1/s), type = "contour",
             contours = list(showlabels = TRUE)) %>% 
-      layout(title = paste("Best Fit Map"), 
+      layout(title = paste("Fit Errors Map"), 
              xaxis = list(title = "b0v"), 
              yaxis = list(title = "predv"))
     
