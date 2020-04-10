@@ -378,7 +378,7 @@ source("harmans_code_2.R")
 source("covid_slovakia/model2.R")
 start = Sys.time()
 ju = corona_explore2(predv = 1:5, 
-                     b0v = seq(100, 420, by = 10), 
+                     b0v = seq(100, 300, by = 10), 
                      gamma1 = 1.25, 
                      fin1 = 11, 
                      gamma2 = 1.06, 
@@ -386,9 +386,7 @@ ju = corona_explore2(predv = 1:5,
 end = Sys.time()
 print(end - start) # expensive simulations
 
-# old
-
-b0v = seq(100, 420, by = 15)
+b0v = seq(100, 300, by = 10)
 predv = 1:5
 n = 5
 gamma = 1.06

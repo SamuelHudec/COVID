@@ -147,7 +147,6 @@ shinyServer(function(input, output, session) {
   
   # reacrtive simulationg
   sim_data = reactive({
-    
     input$update_grid
     # draw the simulated plots with dynamic parametes
     isolate({

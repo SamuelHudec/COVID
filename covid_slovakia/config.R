@@ -4,7 +4,7 @@ gammav_step = 0.01
 fin_step = 1
 
 # N ... celkovy pocet ludi v SR
-N <- 5450000
+#N <- 5450000
 
 # a1 az a9 ... pomer ludi v SR v jednotlivych dekadach veku
 #a <- c(0.11, 0.10, 0.12, 0.16, 0.15, 0.13, 0.13, 0.07, 0.03)
