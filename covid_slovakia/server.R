@@ -73,8 +73,9 @@ shinyServer(function(input, output, session) {
       
       # put togeather
       df1 = data.frame(days = 1:tmaxx, actual = Ctc, fit = rad1c,
-                      days0 = 0:(tmaxx - 1), inf = I1.boliI,
-                      I1.su01 = I1.su01, I1.su26 = I1.su26, I1.su51 = I1.su51)
+                       actualv = fit$Ct, fitv = rad1,
+                       days0 = 0:(tmaxx - 1), inf = I1.boliI,
+                       I1.su01 = I1.su01, I1.su26 = I1.su26, I1.su51 = I1.su51)
       df2 = data.frame(hist = his[his != 0])
   
       dfs = list(df1 = df1, df2 = df2)
@@ -91,7 +92,7 @@ shinyServer(function(input, output, session) {
         gather("legend", "value", -days) %>%
         ggplot(aes(x = days, y = value, col = legend)) +
         theme_minimal() +
-        labs(y = "Počet pozitivnych testov",
+        labs(y = "Počet pozitivnych testov cumulatívne",
              x = "dni") +
         geom_point() + 
         geom_line()
@@ -133,6 +134,21 @@ shinyServer(function(input, output, session) {
         geom_histogram(bins = 9) + 
         theme_minimal() + 
         labs(x = "Odhad veku pozit. test (dekada veku)")
+    )
+  })
+  
+  output$best_fit_5 <- renderPlotly({
+    dd = fit_data()
+    ggplotly(
+      dd$df1 %>% 
+        select(days, actualv, fitv) %>% 
+        gather("legend", "value", -days) %>%
+        ggplot(aes(x = days, y = value, col = legend)) +
+        theme_minimal() +
+        labs(y = "Počet pozitivnych testov denne",
+             x = "dni") +
+        geom_point() + 
+        geom_line()
     )
   })
   
