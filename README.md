@@ -7,5 +7,6 @@ harman's shiny app
 library(tidyverse)
 library(plotly)
 library(shiny)
+library(knitr)
 runGitHub("COVID", "SamuelHudec", subdir="covid_slovakia")
 ```

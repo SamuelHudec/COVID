@@ -5,14 +5,6 @@ output: html_document
 
 
 
-***
-
-head of model __Radoslav Harman__ and colective
-
-technical implementation etc. __Samuel Hudec__
-
-***
-
 # Theoretical background
 
 We propose a simulation model to roughly estimate plausible values of some directly unobservable characteristics of the spread of the infection of the COVID-19 epidemic in Slovakia.At the moment of this writing we can only use the data series of the numbers of all tests and all confirmed cases, without a single death, and very few confirmed recovered individuals.
@@ -29,7 +21,7 @@ such that it can undergo scrutiny from a broader community of professionals and 
 
 # Technical background
 
-App is powered by engine which code you can see below or [As.txt](http://www.iam.fmph.uniba.sk/ospm/Harman/programs/corona_sim.txt)
+App is powered by engine which code you can see below or [As.txt](http://www.iam.fmph.uniba.sk/ospm/Harman/programs/corona_sim.txt) and app lives in [GitHub](https://github.com/SamuelHudec/COVID).
 
 
 ```
