@@ -190,14 +190,4 @@ shinyServer(function(input, output, session) {
              yaxis = list(title = "predv"))
     
   })
-  
-  # code output ####
-  output$string_code <- renderUI({
-    read_lines('model2.R') -> ju
-    juu = numeric(length(ju))
-    for(i in 1:length(ju)){
-      juu[i] = paste(ju[i], "<br/>")
-    }
-    HTML(juu)
-  })
 })

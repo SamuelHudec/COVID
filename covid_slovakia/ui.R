@@ -5,9 +5,9 @@ library(plotly)
 # load static parameters
 source("config.R")
 
-# theory background
-# rmdfiles <- c("theory.Rmd")
-# sapply(rmdfiles, knit, quiet = T)
+# rmd -> md
+rmdfiles <- c("info.Rmd")
+sapply(rmdfiles, knit, quiet = T)
 
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(
@@ -112,7 +112,7 @@ shinyUI(fluidPage(
                     icon = icon("share-square"))
       ),
       # panel for grid search
-      conditionalPanel(condition = "input.tabb == 'code'",
+      conditionalPanel(condition = "input.tabb == 'info'",
                        p("Karta obsahuje akutalny kod na zaklade ktorého su počítané simulácie v interaktívnom prostredí"),
                        p("Celú app aj s prídavnými skriptami najdete na GitHub-e")
         ),
@@ -148,9 +148,9 @@ shinyUI(fluidPage(
           plotlyOutput("sim_err"),
           icon = icon("dna"), value = "gridd"
           ),
-        tabPanel(title = "Code",
-           htmlOutput("string_code"),
-           icon = icon("code-branch"), value = "code"
+        tabPanel(title = "info",
+          withMathJax(includeMarkdown("info.md")),
+          icon = icon("file-alt"), value = "info"
           )
         )
       )
