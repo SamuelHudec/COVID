@@ -1,0 +1,27 @@
+---
+title: "Theoretical and technical background"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+We propose a simulation model to roughly estimate plausible values of some directly unobservable characteristics of the spread of the infection of the COVID-19 epidemic in Slovakia.At the moment of this writing we can only use the data series of the numbers of all tests and all confirmed cases, without a single death, and very few confirmed recovered individuals.
+
+This manuscript reflects the current state of a work in progress. The main purpose of
+this work is to support some modelling decisions of the governmental Institute of Health Policies of the Slovak Republic and other teams, for instance with respect to the calibration of more complex SIR-type models.
+
+An important requirement of this model is that it is easy to implement and understand
+such that it can undergo scrutiny from a broader community of professionals and produce useful results at the early stages of the epidemic.
+
+More detail informations about model you can find in [paper](http://www.iam.fmph.uniba.sk/ospm/Harman/COR01.pdf).
+
+# Engine
+
+[Here](http://www.iam.fmph.uniba.sk/ospm/Harman/programs/corona_sim.txt) is last code, to be updated...
+```{r script, echo=FALSE}
+read_lines('model2.R')
+```
+

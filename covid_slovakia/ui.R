@@ -1,8 +1,13 @@
 library(shiny)
+library(knitr)
 library(plotly)
 
 # load static parameters
 source("config.R")
+
+# theory background
+# rmdfiles <- c("theory.Rmd")
+# sapply(rmdfiles, knit, quiet = T)
 
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(
