@@ -217,6 +217,7 @@ corona_sim2 <- function(pred, x1, x2, n, pic = TRUE) {
       }
     }
     
+    ## nerozumiem prečo su tieto fazy oddelené ked b01 je nezavysle na reštrikciach
     # Prva faza 
     for (t in 1:fin1) {
       # kriticka medza priznakov, ktora zivemu cloveku zabezpeci otestovanie
@@ -311,6 +312,7 @@ corona_sim2 <- function(pred, x1, x2, n, pic = TRUE) {
     lines(rad3, pch = 1, type = "b", col = "black")
                  
     # d) Odhad distribucie vekov pozitivne testovanych
+    ## prečo sa toto počíta podla I a nie podla I1 ???
     rad1 <- sign(I[, tmax + 5])*I[, tmax + 2]
     hist(rad1[rad1 != 0], breaks = 1:10 - 0.5, labels = TRUE,
         main = "Odhad veku pozit. test.",
