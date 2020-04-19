@@ -18,13 +18,13 @@ this work is to support some modelling decisions of the governmental Institute o
 An important requirement of this model is that it is easy to implement and understand
 such that it can undergo scrutiny from a broader community of professionals and produce useful results at the early stages of the epidemic.
 
-[Full text](http://www.iam.fmph.uniba.sk/ospm/Harman/COR01.pdf)
+[__Full text__](http://www.iam.fmph.uniba.sk/ospm/Harman/COR01.pdf)
 
 ***
 
 # Technical background
 
-App is powered by engine which code you can see below or [As.txt](http://www.iam.fmph.uniba.sk/ospm/Harman/programs/corona_sim.txt) and app lives in [GitHub](https://github.com/SamuelHudec/COVID).
+App is powered by engine which code you can see below or [__As.txt__](http://www.iam.fmph.uniba.sk/ospm/Harman/programs/corona_sim.txt) and app lives in [__GitHub__](https://github.com/SamuelHudec/COVID).
 
 ```{r script, echo=FALSE, comment="", tidy=TRUE}
 read_lines('model2.R')

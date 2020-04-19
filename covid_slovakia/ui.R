@@ -135,7 +135,7 @@ shinyUI(fluidPage(
     # Show a plot of the generated distribution
     mainPanel(
       tabsetPanel(id = "tabb",
-        tabPanel(title = "Fit",
+        tabPanel(title = "Model Fit",
           br(),
           h4("The course of detected cases: actual and for the fit"),
           plotlyOutput("best_fit_1"),
@@ -157,15 +157,15 @@ shinyUI(fluidPage(
           br(),
           icon = icon("chart-line"), value = "fitt"
           ),
-        tabPanel(title = "Grid search",
+        tabPanel(title = "Parameters Grid Search",
           br(),
           h4("Fit Errors Map"),
           plotlyOutput("sim_err"),
           icon = icon("dna"), value = "gridd"
           ),
-        tabPanel(title = "info",
+        tabPanel(title = "Deep Info",
           withMathJax(includeMarkdown("info.md")),
-          icon = icon("file-alt"), value = "info"
+          icon = icon("chess-knight"), value = "info"
           )
         )
       )
