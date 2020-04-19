@@ -4,6 +4,7 @@ library(plotly)
 
 # load static parameters
 source("config.R")
+x_days = "Days from epidemy start"
 
 # load neural functions
 source("model2.R")
@@ -92,8 +93,8 @@ shinyServer(function(input, output, session) {
         gather("legend", "value", -days) %>%
         ggplot(aes(x = days, y = value, col = legend)) +
         theme_minimal() +
-        labs(y = "Počet pozitivnych testov cumulatívne",
-             x = "dni") +
+        labs(y = "Cumulative Number of Positive Tests",
+             x = x_days) +
         geom_point() + 
         geom_line()
     )
@@ -105,8 +106,8 @@ shinyServer(function(input, output, session) {
       dd$df1 %>% 
         ggplot(aes(x = days0, y = inf)) + 
         theme_minimal() +
-        labs(y = "Počet symp. infikovaných",
-             x = "dni") +
+        labs(y = "Cumulative number of symptomatically infected",
+             x = x_days) +
         geom_point(alpha = 0.6) + 
         geom_line()
     )
@@ -120,8 +121,8 @@ shinyServer(function(input, output, session) {
         gather("legend", "value", -days) %>%
         ggplot(aes(x = days, y = value, col = legend)) +
         theme_minimal() +
-        labs(y = "Počet Akt. symp. infikovaných",
-             x = "dni") +
+        labs(y = "Number of symptomatically infected",
+             x = x_days) +
         geom_point(alpha = 0.6) + 
         geom_line()
     )
@@ -133,7 +134,7 @@ shinyServer(function(input, output, session) {
       dd$df2 %>% ggplot(aes(x = hist)) + 
         geom_histogram(bins = 9) + 
         theme_minimal() + 
-        labs(x = "Odhad veku pozit. test (dekada veku)")
+        labs(x = "Age decade")
     )
   })
   
@@ -145,8 +146,8 @@ shinyServer(function(input, output, session) {
         gather("legend", "value", -days) %>%
         ggplot(aes(x = days, y = value, col = legend)) +
         theme_minimal() +
-        labs(y = "Počet pozitivnych testov denne",
-             x = "dni") +
+        labs(y = "Daily Number of Positive Tests",
+             x = x_days) +
         geom_point() + 
         geom_line()
     )
@@ -185,9 +186,8 @@ shinyServer(function(input, output, session) {
     s = sim_data()
     plot_ly(y = predv(), x = b0v(), z = t(1/s), type = "contour",
             contours = list(showlabels = TRUE)) %>% 
-      layout(title = paste("Fit Errors Map"), 
-             xaxis = list(title = "b0v"), 
-             yaxis = list(title = "predv"))
+      layout(xaxis = list(title = "Grid b0 param."), 
+             yaxis = list(title = "Grid pred param."))
     
   })
 })
