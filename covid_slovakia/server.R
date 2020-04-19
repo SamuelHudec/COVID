@@ -4,7 +4,7 @@ library(plotly)
 
 # load static parameters
 source("config.R")
-x_days = "Days from epidemy start"
+x_days = "Days from the Start of The Epidemic"
 
 # load neural functions
 source("model2.R")
