@@ -110,22 +110,46 @@ shinyServer(function(input, output, session) {
         labs(y = "Cumulative number of symptomatically infected",
              x = x_days) +
         geom_point(alpha = 0.6) + 
-        geom_line()
+        geom_line(alpha = 0.2)
     )
   })
   
-  output$best_fit_3 <- renderPlotly({
+  output$best_fit_33 <- renderPlotly({
     dd = fit_data()
     ggplotly(
       dd$df1 %>% 
-        select(days, I1.su01, I1.su26, I1.su51) %>% 
-        gather("legend", "value", -days) %>%
-        ggplot(aes(x = days, y = value, col = legend)) +
+        ggplot(aes(x = days, y = I1.su51)) +
         theme_minimal() +
         labs(y = "Number of symptomatically infected",
              x = x_days) +
-        geom_point(alpha = 0.6) + 
-        geom_line()
+        geom_point(alpha = 0.6, col = "#666666") + 
+        geom_line(alpha = 0.2)
+    )
+  })
+  
+  output$best_fit_32 <- renderPlotly({
+    dd = fit_data()
+    ggplotly(
+      dd$df1 %>% 
+        ggplot(aes(x = days, y = I1.su26)) +
+        theme_minimal() +
+        labs(y = "Number of symptomatically infected",
+             x = x_days) +
+        geom_point(alpha = 0.6, col = "#CC0000") + 
+        geom_line(alpha = 0.2)
+    )
+  })
+  
+  output$best_fit_31 <- renderPlotly({
+    dd = fit_data()
+    ggplotly(
+      dd$df1 %>% 
+        ggplot(aes(x = days, y = I1.su01)) +
+        theme_minimal() +
+        labs(y = "Number of symptomatically infected",
+             x = x_days) +
+        geom_point(alpha = 0.6, col = "#006600") + 
+        geom_line(alpha = 0.2)
     )
   })
   
