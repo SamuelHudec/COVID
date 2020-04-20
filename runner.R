@@ -292,6 +292,13 @@ hist(rad1[rad1 != 0], breaks = 1:10 - 0.5, labels = TRUE,
 
 ## new
 df = data.frame(hist = rad1[rad1 != 0])
+
+df$cut <- cut(df$hist, seq(0, 10, by=1))
+ggplotly(
+  ggplot(df,aes(cut)) +
+    geom_histogram(stat = "count", aes(fill = ..count..))
+)
+
 ggplotly(
 df %>% ggplot(aes(x = hist)) + 
   geom_histogram(bins = 9) + 

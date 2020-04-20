@@ -78,6 +78,7 @@ shinyServer(function(input, output, session) {
                        days0 = 0:(tmaxx - 1), inf = I1.boliI,
                        I1.su01 = I1.su01, I1.su26 = I1.su26, I1.su51 = I1.su51)
       df2 = data.frame(hist = his[his != 0])
+      df2$cut <- cut(df2$hist, seq(0, 10, by=1))
   
       dfs = list(df1 = df1, df2 = df2)
       dfs
@@ -131,8 +132,8 @@ shinyServer(function(input, output, session) {
   output$best_fit_4 <- renderPlotly({
     dd = fit_data()
     ggplotly(
-      dd$df2 %>% ggplot(aes(x = hist)) + 
-        geom_histogram(bins = 9) + 
+      dd$df2 %>% ggplot(aes(cut)) +
+        geom_histogram(stat = "count", aes(fill = ..count..)) +
         theme_minimal() + 
         labs(x = "Age decade")
     )
