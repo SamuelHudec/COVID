@@ -5,8 +5,8 @@ account: samuell
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 2141844
-bundleId: 3040221
+bundleId: 3044351
 url: https://samuell.shinyapps.io/covid_slovakia/
-when: 1587407012.40828
+when: 1587477474.11045
 asMultiple: FALSE
 asStatic: FALSE

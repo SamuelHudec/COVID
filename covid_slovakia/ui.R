@@ -11,7 +11,7 @@ sapply(rmdfiles, knit, quiet = T)
 
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(
-  
+  tags$head(includeHTML(("GA.html"))),
   # Application title
   titlePanel("Stochastic Simulation of the COVID-19 Epidemic in Slovakia", 
              windowTitle = "COVID SLOVAKIA"),
